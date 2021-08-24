@@ -15,17 +15,17 @@ Stretch goals:
 
 ### How it works
 Alice starts recording and live streaming. She makes a record in a database (GUN) that gives her peer id and perhaps optionally some metadata.<br/>
-Mr. Dude "asks" to join the session. If his key is valid, he gets access to the database Alice saved to.
-Mr. Dude takes a snapshot of the entire graph starting at the node that Alice created.
-He ends up with a tree like this
-A -> B1, B2, B3, B4
-if he expands B1, he might see:
-B1 -> C1, C2, C3, C4
-expanding B2, he perhaps sees:
-B2 -> C5, C6
-he now knows that B2 has only 2 active connections, and thus has room for him to connect.
-Mr. Dude calls B2, B2 accepts the call because he has less than 4 active connections, and B2 streams Alice's stream to Mr. Dude. Mr. Dude would now be considered C7. Once all B's have 4 connections, and C1-C6 have 4 connections, Mr. Dude (C7), would begin accepting new connections. 
-> Note: It would be simpler for him to just start accepting connections immediately, however new participants would ideally not call him until the other slots were filled up. They would at least prefer to call the open B's because they would have 1 degree less of separation from Alice (A).
+Mr. Dude "asks" to join the session. If his key is valid, he gets access to the database Alice saved to.<br/>
+Mr. Dude takes a snapshot of the entire graph starting at the node that Alice created.<br/>
+He ends up with a tree like this<br/>
+A -> B1, B2, B3, B4<br/>
+if he expands B1, he might see:<br/>
+B1 -> C1, C2, C3, C4<br/>
+expanding B2, he perhaps sees:<br/>
+B2 -> C5, C6<br/>
+he now knows that B2 has only 2 active connections, and thus has room for him to connect.<br/>
+Mr. Dude calls B2, B2 accepts the call because he has less than 4 active connections, and B2 streams Alice's stream to Mr. Dude. Mr. Dude would now be considered C7. Once all B's have 4 connections, and C1-C6 have 4 connections, Mr. Dude (C7), would begin accepting new connections. <br/>
+> Note: It would be simpler for him to just start accepting connections immediately, however new participants would ideally not call him until the other slots were filled up. They would at least prefer to call the open B's because they would have 1 degree less of separation from Alice (A).<br/>
 Once Mr. Dude has more connections, they would be receiving the stream such that Alice (A) streams directly to B2, who would forward the stream to Mr. Dude (C7), who would forward the stream to his connections.
 
 this should scale really well, particularly if only 1 or a small number of participants are ever actively streaming.
