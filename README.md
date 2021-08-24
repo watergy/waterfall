@@ -14,7 +14,7 @@ Stretch goals:
 - save the streams to indexedDB using GUN*
 
 ### How it works
-Alice starts recording and live streaming. She makes a record in a database (GUN) that gives her peer id and perhaps optionally some metadata.
+Alice starts recording and live streaming. She makes a record in a database (GUN) that gives her peer id and perhaps optionally some metadata.<br/>
 Mr. Dude "asks" to join the session. If his key is valid, he gets access to the database Alice saved to.
 Mr. Dude takes a snapshot of the entire graph starting at the node that Alice created.
 He ends up with a tree like this
