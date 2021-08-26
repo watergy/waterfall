@@ -1,8 +1,5 @@
 import Peer from "peerjs";
-import Gun from "gun";
-import "gun/lib/load.js";
 
-const prefix = "applebeedog";
 const ids = [
   "a1",
   "b1",
@@ -158,104 +155,6 @@ export class Viewer {
     let streamIsIncoming = false;
     return new Promise(async (resolve, reject) => {
       const peerId = this.prefix + ids[this.callingIndex];
-      console.log("trying to call", peerId);
-      const call = peer.call(
-        peerId,
-        new MediaStream([
-          createEmptyAudioTrack(),
-          createEmptyVideoTrack({ width: 640, height: 480 }),
-        ])
-      );
-      call.on("stream", (stream) => {
-        streamIsIncoming = true;
-        console.log(stream);
-        this.activeConnections = 0;
-        resolve(stream);
-      });
-      call.on("close", async () => {
-        console.log("it closed");
-        this.callingIndex += 1;
-        reslove(await this.startMakingCalls(peer));
-      });
-      call.on("error", (err) => {
-        this.callingIndex += 1;
-
-        console.log("it errored", err);
-      });
-
-      setTimeout(async () => {
-        if (!streamIsIncoming) {
-          this.callingIndex += 1;
-          resolve(await this.startMakingCalls(peer));
-        }
-      }, 500);
-    });
-  }
-}
-
-export class DumbPresenter {
-  constructor(opts = {}) {
-    // the presenter is always A1
-    this.peer = new Peer("a1", { host: "localhost", port: 9000 });
-  }
-  async startPresentingMedia(stream, opts) {
-    if (this.peer.disconnected) throw new Error("peerjs not connected");
-    this.peer.on("call", (call) => {
-      console.log("incoming call", call);
-      console.log(this.activeConnections);
-      call.answer(stream);
-    });
-  }
-}
-
-export class DumbViewer {
-  constructor(opts = {}) {
-    this.peer = null;
-    this.index = 0;
-    this.stream = null;
-    this.callingIndex = 0;
-  }
-  async startViewingMedia() {
-    return new Promise(async (resolve, reject) => {
-      // try to get a Peer ID starting with B1, B2..
-      this.stream = await this.tryToConnect();
-
-      resolve(this.stream);
-    });
-  }
-
-  async tryToConnect() {
-    return new Promise(async (resolve, reject) => {
-      const peer = new Peer(ids[this.index], { host: "localhost", port: 9000 });
-      this.peer = peer;
-      this.peer.on("error", async (e) => {
-        console.log(e);
-        this.index += 1;
-        resolve(await this.tryToConnect());
-      });
-      this.peer.on("open", async (conn) => {
-        console.log(conn);
-        console.log(peer.id);
-        this.peer.on("call", (call) => {
-          console.log("call from", call);
-          console.log("answering call", call);
-          call.answer(this.stream);
-        });
-        const stream = await this.startMakingCalls(peer);
-        this.stream = stream;
-        resolve(stream);
-      });
-
-      if (this.index >= 15) {
-        reject("no open spots");
-      }
-    });
-  }
-
-  async startMakingCalls(peer) {
-    let streamIsIncoming = false;
-    return new Promise(async (resolve, reject) => {
-      const peerId = ids[this.callingIndex];
       console.log("trying to call", peerId);
       const call = peer.call(
         peerId,
