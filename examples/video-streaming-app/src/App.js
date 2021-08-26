@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState } from "react";
-import { Presenter, Viewer } from "../../../index";
+import { DumbPresenter, DumbViewer, Presenter, Viewer } from "../../../index";
 import "./App.css";
-
-const viewer = new Viewer();
 
 function App() {
   const videoRef = useRef(null);
+  const [streamPrefix, setStreamPrefix] = useState("");
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    const p = prompt("enter a chat ID");
+    setStreamPrefix(p);
+  }, []);
 
   const handleSuccess = (stream, presenter) => {
     if (videoRef?.current) {
@@ -21,6 +23,8 @@ function App() {
 
   const startListening = async (e) => {
     e.preventDefault();
+    const viewer = new Viewer(streamPrefix);
+
     const stream = await viewer.startViewingMedia();
     console.log(stream);
     if (videoRef?.current) {
@@ -35,7 +39,7 @@ function App() {
       <button
         onClick={async (e) => {
           e.preventDefault();
-          const presenter = new Presenter();
+          const presenter = new Presenter(streamPrefix);
 
           window.navigator.getUserMedia(
             { audio: false, video: true },
