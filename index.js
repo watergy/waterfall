@@ -4,6 +4,7 @@ import "gun/lib/load.js";
 
 const prefix = "applebeedog";
 const ids = [
+  "a1",
   "b1",
   "b2",
   "b3",
@@ -50,7 +51,7 @@ const createEmptyVideoTrack = ({ width, height }) => {
 export class Presenter {
   constructor(opts = {}) {
     // the presenter is always A1
-    this.peer = new Peer(prefix + "A1", { host: "localhost", port: 9000 });
+    this.peer = new Peer("a1", { host: "localhost", port: 9000 });
     this.activeConnections = 0;
   }
   async startPresentingMedia(stream, opts) {
@@ -74,50 +75,86 @@ export class Viewer {
     this.peer = null;
     this.index = 0;
     this.stream = null;
+    this.activeConnections = 0;
+    this.callingIndex = 0;
   }
   async startViewingMedia() {
     return new Promise(async (resolve, reject) => {
       // try to get a Peer ID starting with B1, B2..
       this.stream = await this.tryToConnect();
+
       resolve(this.stream);
     });
   }
 
   async tryToConnect() {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       const peer = new Peer(ids[this.index], { host: "localhost", port: 9000 });
-      peer.on("error", (e) => {
+      this.peer = peer;
+      this.peer.on("error", async (e) => {
         console.log(e);
         this.index += 1;
-        resolve(this.tryToConnect());
+        resolve(await this.tryToConnect());
       });
-      peer.on("open", (conn) => {
+      this.peer.on("open", async (conn) => {
         console.log(conn);
         console.log(peer.id);
-        if (peer.id.startsWith("b")) {
-          console.log("trying to call A");
-          // try calling A
-          const call = peer.call(
-            prefix + "A1",
-            new MediaStream([
-              createEmptyAudioTrack(),
-              createEmptyVideoTrack({ width: 640, height: 480 }),
-            ])
-          );
-          call.on("stream", (stream) => {
-            console.log(stream);
-            resolve(stream);
-          });
-
-          call.on("error", console.error);
-        } else if (peer.id.startsWith("c")) {
-          // try calling b1, then b2, then b3, b4
-        }
+        this.peer.on("call", (call) => {
+          console.log("call from", call);
+          if (this.activeConnections < 4) {
+            console.log("answering call", call);
+            call.answer(this.stream);
+            this.activeConnections += 1;
+          } else {
+            console.log("declining call", call);
+            call.close();
+          }
+        });
+        const stream = await this.startMakingCalls(peer);
+        this.stream = stream;
+        resolve(stream);
       });
+
       if (this.index >= 15) {
-        alert("no spots open");
         reject("no open spots");
       }
+    });
+  }
+
+  async startMakingCalls(peer) {
+    let streamIsIncoming = false;
+    return new Promise(async (resolve, reject) => {
+      const peerId = ids[this.callingIndex];
+      console.log("trying to call", peerId);
+      const call = peer.call(
+        peerId,
+        new MediaStream([
+          createEmptyAudioTrack(),
+          createEmptyVideoTrack({ width: 640, height: 480 }),
+        ])
+      );
+      call.on("stream", (stream) => {
+        streamIsIncoming = true;
+        console.log(stream);
+        resolve(stream);
+      });
+      call.on("close", async () => {
+        console.log("it closed");
+        this.callingIndex += 1;
+        reslove(await this.startMakingCalls(peer));
+      });
+      call.on("error", (err) => {
+        this.callingIndex += 1;
+
+        console.log("it errored", err);
+      });
+
+      setTimeout(async () => {
+        if (!streamIsIncoming) {
+          this.callingIndex += 1;
+          resolve(await this.startMakingCalls(peer));
+        }
+      }, 500);
     });
   }
 }
