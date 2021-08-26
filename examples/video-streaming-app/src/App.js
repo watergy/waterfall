@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { DumbPresenter, DumbViewer, Presenter, Viewer } from "../../../index";
+import { DumbPresenter, DumbViewer, Presenter, Viewer } from "p2prtc";
 import "./App.css";
 
 function App() {
