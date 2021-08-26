@@ -1,0 +1,21 @@
+{
+  "name": "p2prtc",
+  "version": "0.0.1",
+  "description": "weave together webrtc connections for a highly scalable p2p video streaming service",
+  "main": "index.js",
+  "repository": "https://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@github.com/watergy/waterfall.git",
+  "author": "Chance Embrey-Farquhar <cembreyfarquhar@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "gun": "^0.2020.1233",
+    "peer": "^0.6.1",
+    "peerjs": "^1.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^16.7.1",
+    "nodemon": "^2.0.12",
+    "ts-node": "^10.2.1",
+    "typescript": "^4.3.5"
+  }
+}

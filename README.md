@@ -1,5 +1,6 @@
 # waterfall
 
+> Jump to the bottom if you want to learn how to contribute! 
 ### What is this?
 Waterfall is a system or protocol that strings together webrtc connections to achieve scaled live streaming sessions without the use of a centralized SFU server. 
 
@@ -67,3 +68,10 @@ async startViewing(streamerID) {
 
 ### Usage
 TODO
+
+
+### Contributor's Guide
+Play with the code a bit. Here's how it works...
+
+When you're ready to contribute, make a branch with a descriptive name 
+fix literally anything you think could use improvement! Chat with me on discord about what changes you want to make.
