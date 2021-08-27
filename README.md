@@ -43,35 +43,12 @@ With each new layer, some amount of latency is introduced. This needs to be test
 - We're going to use PeerJS for now, because it massively simplifies the WebRTC process. In the future, it would be cool to move towards a more native implementation, and even try using GUN to relay the connection info so that the only servers involved are the GUN relay servers. 
 - Additionally, could we use a Distributed Hash Table (DHT) to store offer/answer info? I'm not sure how much of that needs to be dynamic, but if we did that we would only need to contact ICE servers and we would have an almost 100% peer to peer system.
 
-### Psuedocode
-```
-startStreaming() {
-    const stream = await getVideoStream(); // get the user media 
-    const peer = new Peer(); // create a new Peerjs instance
-    peer.on('open', id => Gun.get('streams').set(id)) // set the peer ID in GUN so others can find us
-    peer.on('call', call => if (less than 4 active connections) {accept call}) // accept the call if and only if we have < 4 active
-}
-```
-```
-async startViewing(streamerID) {
-    const graph = await Gun.get('streams').get(streamerID); // get the graph of the streamer and viewers
-    const openSpot = traverseGraph(); // look for a spot that we can join
-    const peer = new Peer(); // create a new Peerjs instance
-    peer.on('open', id => {
-        const call = peer.call(openSpot); // call the open peer
-        Gun.get(the open spot).set(id) // let GUN know where we are in the graph
-        call.on('stream', stream => setVideoSrc(stream)) // set our video player src to the stream
-    });
-    peer.on('call', call => same as the streamer, IFF we have less than 4 active, accept)
-}
-```
-
 ### Usage
-TODO
+See the example React app in examples/waterfalldemo
 
 
 ### Contributor's Guide
-Play with the code a bit. Here's how it works...
+Play with the code a bit. Please contact me directly (if we aren't already connected, you can find my email in the commit history) for ANY questions you have or for anything that is not clear. 
 
 When you're ready to contribute, make a branch with a descriptive name 
 fix literally anything you think could use improvement! Chat with me on discord about what changes you want to make.
