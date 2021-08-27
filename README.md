@@ -67,11 +67,11 @@ async startViewing(streamerID) {
 ```
 
 ### Usage
-TODO
+See the example React app in examples/waterfalldemo
 
 
 ### Contributor's Guide
-Play with the code a bit. Here's how it works...
+Play with the code a bit. Please contact me directly (if we aren't already connected, you can find my email in the commit history) for ANY questions you have or for anything that is not clear. 
 
 When you're ready to contribute, make a branch with a descriptive name 
 fix literally anything you think could use improvement! Chat with me on discord about what changes you want to make.
