@@ -185,7 +185,7 @@ export class Viewer {
           this.callingIndex += 1;
           resolve(await this.startMakingCalls(peer));
         }
-      }, 500);
+      }, 300);
     });
   }
 }

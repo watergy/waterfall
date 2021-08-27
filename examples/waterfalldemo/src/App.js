@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { DumbPresenter, DumbViewer, Presenter, Viewer } from "p2prtc";
+import { Presenter, Viewer } from "p2prtc";
+// NOTE! Uncomment this line below (and comment out the
+// line above) when you want to dev
+// this will let you use the library that is in this repo
+// instead of the one on npm.
+// import { Presenter, Viewer } from "../../../index.js";
 import "./App.css";
 
 function App() {
@@ -50,7 +55,7 @@ function App() {
       >
         start streaming
       </button>
-      <video ref={videoRef} autoPlay controls height="200px" width="300px" />
+      <video ref={videoRef} autoPlay controls height="150px" width="300px" />
       <button onClick={startListening}>start listening</button>
     </div>
   );
